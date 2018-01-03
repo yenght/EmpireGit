@@ -1,14 +1,14 @@
 var app={
 
-  inicio: function(){
-
+  cambiarOrientacion: function() {
     // Forzar la horientación horizontal
     window.screen.orientation.lock('landscape');
 
-    // Detectar las dimensiones del dispositivo
-    alto  = document.documentElement.clientHeight;
-    ancho = document.documentElement.clientWidth;
+	app.inicio();
+  },
 
+  inicio: function(){
+	
 	// Marcadores
     scoreString = 'Score : ';
     hiscoreString = 'Highscore : ';
@@ -25,6 +25,10 @@ var app={
 	speedMult = 1;
 	frecMult = 10;
 	livesMult = 1;
+
+    // Detectar las dimensiones del dispositivo
+    alto  = document.documentElement.clientHeight;
+    ancho = document.documentElement.clientWidth;
 	
     app.vigilaSensores();
     app.iniciaJuego();
@@ -41,6 +45,7 @@ var app={
 	  game.load.image('starfield', 'assets/starfield.png');
       game.load.image('falcon', 'assets/falcon.png');
       game.load.image('meteor', 'assets/meteor.png');
+	  game.load.spritesheet('explosion', 'assets/explode.png', 128, 128);
 	  game.load.audio('music', 'assets/music.mp3');
 	  game.load.audio('chewbacca', 'assets/chewbacca.mp3');
 	  game.load.audio('r2', 'assets/r2.mp3');
@@ -168,7 +173,12 @@ var app={
 
       // Reproducir sonido
  	  choque.play();
-		  
+	  navigator.vibrate(500);
+
+	  var explosion = game.add.sprite(falcon.body.x-40, falcon.body.y-40, 'explosion');
+ 	  var anim = explosion.animations.add('explosion');
+	  explosion.animations.play('explosion', 50, false, true);
+
       // Resetear los meteoritos
 	  meteors.destroy();
 	  meteors = game.add.group();
@@ -224,6 +234,7 @@ var app={
 
 if ('addEventListener' in document) {
     document.addEventListener('deviceready', function() {
-        app.inicio();
+        //app.inicio();
+		app.cambiarOrientacion();
     }, false);
 }
